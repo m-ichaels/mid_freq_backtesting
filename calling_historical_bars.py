@@ -11,14 +11,14 @@ headers = {
 }
 
 params = {
-    "symbols": "SPY",
+    "symbols": "GLD",
     "timeframe": "30Min"
 }
 
 response = requests.get(url, headers=headers, params=params)
 
 data = response.json()
-spy_data = data['bars']['SPY']
+spy_data = data['bars']['GLD']
 df = pd.DataFrame(spy_data)
 print(df['c'])
 

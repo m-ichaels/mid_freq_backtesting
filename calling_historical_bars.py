@@ -10,29 +10,32 @@ headers = {
     "APCA-API-SECRET-KEY": "eFKWe2hN771IBcH27mc7BJSNZNI5ecp6utRq7isd",
 }
 
+sp500_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK.B', 'V', 'JNJ', 'SPY']
+
 params = {
-    "symbols": "SPY",
     "timeframe": "5Min"
 }
 
+params["symbols"] = sp500_tickers
 response = requests.get(url, headers=headers, params=params)
 
 data = response.json()
-spy_data = data['bars']['SPY']
-periods = 14
-df = pd.DataFrame(spy_data)
+print(data)
+# spy_data = data['bars']['SPY']
+# periods = 14
+# df = pd.DataFrame(spy_data)
 
-delta = df['c'].diff()
+# delta = df['c'].diff()
 
-gain = delta.where(delta > 0, 0)
-loss = -delta.where(delta < 0, 0)
-avg_gain = gain.rolling(window=periods, min_periods=1).mean()
-avg_loss = loss.rolling(window=periods, min_periods=1).mean()
+# gain = delta.where(delta > 0, 0)
+# loss = -delta.where(delta < 0, 0)
+# avg_gain = gain.rolling(window=periods, min_periods=1).mean()
+# avg_loss = loss.rolling(window=periods, min_periods=1).mean()
 
-rs = avg_gain / avg_loss
+# rs = avg_gain / avg_loss
 
-rsi = 100 - (100/(1 + rs))
-print(rsi)
+# rsi = 100 - (100/(1 + rs))
+# print(rsi.iloc[-1])
 
 # print(response.text)
 

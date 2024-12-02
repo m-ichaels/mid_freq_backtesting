@@ -1,0 +1,54 @@
+from alpaca.data.historical import StockHistoricalDataClient
+from alpaca.data.requests import StockBarsRequest
+from alpaca.data.timeframe import TimeFrame
+from datetime import datetime
+
+# Initialize client for stock data
+client = StockHistoricalDataClient("PK1FSI37O17SE0J9Y7NF", "eFKWe2hN771IBcH27mc7BJSNZNI5ecp6utRq7isd")
+
+# Request parameters for Gold (GLD) and SPY
+request_params = StockBarsRequest(
+    symbol_or_symbols=["GLD", "SPY"],  # Symbols for Gold ETF and SPY
+    timeframe=TimeFrame.Day,
+    start=datetime(2022, 7, 1),
+    end=datetime(2022, 9, 1)
+)
+
+# Fetch historical data
+bars = client.get_stock_bars(request_params)
+
+
+# gld_data = bars.df.loc["GLD"]
+
+
+periods = 14
+# delta = gld_data['open'].diff()
+
+# gain = delta.where(delta > 0, 0)
+# loss = -delta.where(delta < 0, 0)
+
+# avg_gain = gain.rolling(window=periods, min_periods=1).mean()
+# avg_loss = loss.rolling(window=periods, min_periods=1).mean()
+
+# rs = avg_gain / avg_loss
+
+# rsi = 100 - (100 / (1 + rs))
+
+# print("RSI (GLD):")
+# print(rsi)
+
+
+spy_data = bars.df.loc["SPY"]
+delta_spy = spy_data['open'].diff()
+
+gain_spy = delta_spy.where(delta_spy > 0, 0)
+loss_spy = -delta_spy.where(delta_spy < 0, 0)
+
+avg_gain_spy = gain_spy.rolling(window=periods, min_periods=1).mean()
+avg_loss_spy = loss_spy.rolling(window=periods, min_periods=1).mean()
+
+rs_spy = avg_gain_spy / avg_loss_spy
+rsi_spy = 100 - (100 / (1 + rs_spy))
+
+print("RSI (SPY):")
+print(rsi_spy)

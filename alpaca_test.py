@@ -15,10 +15,18 @@ request_params = CryptoBarsRequest(
 
 bars = client.get_crypto_bars(request_params)
 
-# convert to dataframe
-bars.df
+btc_data = bars.df.loc["BTC/USD"]
 
-# access bars as list - important to note that you must access by symbol key
-# even for a single symbol request - models are agnostic to number of symbols
-bars["BTC/USD"]
-print(bars["BTC/USD"])
+periods=14
+delta = btc_data['open'].diff()
+
+gain = delta.where(delta > 0, 0)
+loss = -delta.where(delta < 0, 0)
+avg_gain = gain.rolling(window=periods, min_periods=1).mean()
+avg_loss = loss.rolling(window=periods, min_periods=1).mean()
+
+rs = avg_gain / avg_loss
+
+rsi = 100 - (100/(1 + rs))
+print(rsi)
+# print(rsi.iloc[-1])

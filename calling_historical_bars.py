@@ -13,31 +13,28 @@ headers = {
 sp500_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK.B', 'V', 'JNJ', 'SPY']
 
 params = {
-    "timeframe": "5Min"
+    "symbols":"SPY",
+    "timeframe":"5Min"
 }
 
-params["symbols"] = sp500_tickers
 response = requests.get(url, headers=headers, params=params)
 
 data = response.json()
-print(data)
-# spy_data = data['bars']['SPY']
-# periods = 14
-# df = pd.DataFrame(spy_data)
+spy_data = data['bars']['SPY']
+periods = 14
+df = pd.DataFrame(spy_data)
 
-# delta = df['c'].diff()
+delta = df['c'].diff()
 
-# gain = delta.where(delta > 0, 0)
-# loss = -delta.where(delta < 0, 0)
-# avg_gain = gain.rolling(window=periods, min_periods=1).mean()
-# avg_loss = loss.rolling(window=periods, min_periods=1).mean()
+gain = delta.where(delta > 0, 0)
+loss = -delta.where(delta < 0, 0)
+avg_gain = gain.rolling(window=periods, min_periods=1).mean()
+avg_loss = loss.rolling(window=periods, min_periods=1).mean()
 
-# rs = avg_gain / avg_loss
+rs = avg_gain / avg_loss
 
-# rsi = 100 - (100/(1 + rs))
-# print(rsi.iloc[-1])
-
-# print(response.text)
+rsi = 100 - (100/(1 + rs))
+print(rsi.iloc[-1])
 
 # # Check if the request was successful
 # if response.status_code == 200:

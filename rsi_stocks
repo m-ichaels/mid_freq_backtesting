@@ -1,108 +1,24 @@
-# from alpaca.data.historical import StockHistoricalDataClient
-# from alpaca.data.requests import StockBarsRequest
-# from alpaca.data.timeframe import TimeFrame
-# from datetime import datetime
-
-# client = StockHistoricalDataClient("PK1FSI37O17SE0J9Y7NF", "eFKWe2hN771IBcH27mc7BJSNZNI5ecp6utRq7isd")
-
-# request_params = StockBarsRequest(
-#     symbol_or_symbols=["GLD", "SPY"],
-#     timeframe=TimeFrame.Day,
-#     start=datetime(2020, 7, 1),
-#     end=datetime(2024, 9, 1)
-# )
-
-# bars = client.get_stock_bars(request_params)
-
-
-# gld_data = bars.df.loc["GLD"]
-
-
-# periods = 14
-# delta = gld_data['open'].diff()
-
-# gain = delta.where(delta > 0, 0)
-# loss = -delta.where(delta < 0, 0)
-
-# avg_gain = gain.rolling(window=periods, min_periods=1).mean()
-# avg_loss = loss.rolling(window=periods, min_periods=1).mean()
-
-# rs = avg_gain / avg_loss
-
-# rsi = 100 - (100 / (1 + rs))
-
-# portfolio = {"cash": 10000, "shares": 0}  # Initial portfolio with $10,000 cash
-# trade_log = []  # Log of trades
-
-# for date, row in gld_data.iterrows():
-#     current_price = row["close"]
-#     current_rsi = rsi.loc[date]
-
-#     # Check RSI for buy/sell conditions
-#     if 2 <= current_rsi <= 20 and portfolio["cash"] >= current_price:
-#         # Buy action: Buy 1 share
-#         portfolio["shares"] += 1
-#         portfolio["cash"] -= current_price
-#         trade_log.append((date, "BUY", current_price))
-
-#     elif not (2 <= current_rsi <= 20) and portfolio["shares"] > 0:
-#         # Sell action: Sell all shares
-#         portfolio["cash"] += portfolio["shares"] * current_price
-#         trade_log.append((date, "SELL", current_price))
-#         portfolio["shares"] = 0
-
-# # Calculate final portfolio value
-# final_value = portfolio["cash"] + (portfolio["shares"] * gld_data.iloc[-1]["close"])
-
-# # Results
-# print("Trade Log:")
-# for trade in trade_log:
-#     print(trade)
-
-# print("\nFinal Portfolio Value: ${:.2f}".format(final_value))
-# print("Remaining Cash: ${:.2f}".format(portfolio["cash"]))
-# print("Remaining Shares: {}".format(portfolio["shares"]))
-
-
-# spy_data = bars.df.loc["SPY"]
-# delta_spy = spy_data['open'].diff()
-
-# gain_spy = delta_spy.where(delta_spy > 0, 0)
-# loss_spy = -delta_spy.where(delta_spy < 0, 0)
-
-# avg_gain_spy = gain_spy.rolling(window=periods, min_periods=1).mean()
-# avg_loss_spy = loss_spy.rolling(window=periods, min_periods=1).mean()
-
-# rs_spy = avg_gain_spy / avg_loss_spy
-# rsi_spy = 100 - (100 / (1 + rs_spy))
-
-# print(rsi_spy)
-
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 from datetime import datetime
 
-# Initialize the stock historical data client
 client = StockHistoricalDataClient("PK1FSI37O17SE0J9Y7NF", "eFKWe2hN771IBcH27mc7BJSNZNI5ecp6utRq7isd")
 
-# Request parameters
 request_params = StockBarsRequest(
-    symbol_or_symbols=["GLD"],  # Backtesting only GLD for simplicity
+    symbol_or_symbols=["GLD"],
     timeframe=TimeFrame.Day,
-    start=datetime(2020, 1, 1),  # Start from 2020
-    end=datetime(2024, 1, 1)    # End at the start of 2024
+    start=datetime(2020, 1, 1),
+    end=datetime(2024, 1, 1)
 )
 
-# Fetch historical bars
 bars = client.get_stock_bars(request_params)
 gld_data = bars.df.loc["GLD"]
 
-# RSI Calculation
 periods = 14
-delta = gld_data['open'].diff()  # Price changes
-gain = delta.where(delta > 0, 0)  # Positive changes
-loss = -delta.where(delta < 0, 0)  # Negative changes
+delta = gld_data['open'].diff()
+gain = delta.where(delta > 0, 0)
+loss = -delta.where(delta < 0, 0)
 
 avg_gain = gain.rolling(window=periods, min_periods=1).mean()
 avg_loss = loss.rolling(window=periods, min_periods=1).mean()
@@ -110,10 +26,10 @@ avg_loss = loss.rolling(window=periods, min_periods=1).mean()
 rs = avg_gain / avg_loss
 rsi = 100 - (100 / (1 + rs))
 
-# Backtesting logic
-portfolio = {"cash": 10000, "shares": 0}  # Initial portfolio with $10,000 cash
-trade_log = []  # Log of trades
-equity_curve = []  # Track equity values over time for drawdown calculation
+num_shares_to_buy = 20
+portfolio = {"cash": 10000, "shares": 0}
+trade_log = []
+equity_curve = []
 
 winning_trades = 0
 losing_trades = 0
@@ -122,40 +38,34 @@ for date, row in gld_data.iterrows():
     current_price = row["close"]
     current_rsi = rsi.loc[date]
 
-    # Update equity curve
     equity_value = portfolio["cash"] + (portfolio["shares"] * current_price)
     equity_curve.append(equity_value)
 
-    # Check RSI for buy/sell conditions
-    if 2 <= current_rsi <= 20 and portfolio["cash"] >= current_price * 10:
-        # Buy action: Buy 10 shares
-        portfolio["shares"] += 10
-        portfolio["cash"] -= current_price * 10
-        trade_log.append((date, "BUY", current_price))
+    if 2 <= current_rsi <= 20 and portfolio["cash"] >= current_price * num_shares_to_buy:
+        portfolio["shares"] += num_shares_to_buy
+        portfolio["cash"] -= current_price * num_shares_to_buy
+        trade_log.append((date, "BUY", current_price, num_shares_to_buy))
 
     elif not (2 <= current_rsi <= 20) and portfolio["shares"] > 0:
-        # Sell action: Sell all shares
         sell_price = current_price
-        cost_basis = sum(trade[2] for trade in trade_log if trade[1] == "BUY") / len(
-            [trade for trade in trade_log if trade[1] == "BUY"]
-        )
+        total_cost = sum(trade[2] * trade[3] for trade in trade_log if trade[1] == "BUY")
+        total_shares = sum(trade[3] for trade in trade_log if trade[1] == "BUY")
+        cost_basis = total_cost / total_shares if total_shares > 0 else 0
+
         if sell_price > cost_basis:
             winning_trades += 1
         else:
             losing_trades += 1
 
         portfolio["cash"] += portfolio["shares"] * sell_price
-        trade_log.append((date, "SELL", sell_price))
+        trade_log.append((date, "SELL", sell_price, portfolio["shares"]))
         portfolio["shares"] = 0
 
-# Calculate final portfolio value
 final_value = portfolio["cash"] + (portfolio["shares"] * gld_data.iloc[-1]["close"])
 
-# Calculate percentage of winning trades
 total_trades = winning_trades + losing_trades
 winning_percentage = (winning_trades / total_trades) * 100 if total_trades > 0 else 0
 
-# Calculate maximum drawdown
 max_equity = 0
 max_drawdown = 0
 
@@ -164,7 +74,6 @@ for value in equity_curve:
     drawdown = max_equity - value
     max_drawdown = max(max_drawdown, drawdown)
 
-# Results
 print("Trade Log:")
 for trade in trade_log:
     print(trade)

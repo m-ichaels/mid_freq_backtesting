@@ -16,8 +16,3 @@ This repository contains a Python script designed to demonstrate fluency in Pyth
 - Python 3.7+
 - `requests` or any relevant API wrapper (depending on the trading platform)
 - API credentials (obtained from the trading platform)
-
-## Setup
-1. Clone the repository to your local machine.
-   ```bash
-   git clone https://github.com/yourusername/trading-api-integration.git

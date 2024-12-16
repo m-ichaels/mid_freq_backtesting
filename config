@@ -1,2 +1,2 @@
-API_KEY = "PK8A2RG52BRFUD5F28NK"
-SECRET_KEY = "CbIvV9NwVRx4fg2wCDpgQV4WDKgbdPsz5QRaShHo"
+API_KEY = "your_alpaca_key_here"
+SECRET_KEY = "your_secret_key_here"

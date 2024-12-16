@@ -6,8 +6,8 @@ url = "https://data.alpaca.markets/v2/stocks/bars"
 
 headers = {
     "accept": "application/json",
-    "APCA-API-KEY-ID": "PK1FSI37O17SE0J9Y7NF",
-    "APCA-API-SECRET-KEY": "eFKWe2hN771IBcH27mc7BJSNZNI5ecp6utRq7isd",
+    "APCA-API-KEY-ID": "your_alpaca_key_here",
+    "APCA-API-SECRET-KEY": "your_secret__key_here",
 }
 
 sp500_tickers = ['AAPL', 'MSFT', 'GOOGL', 'AMZN', 'TSLA', 'META', 'NVDA', 'BRK.B', 'V', 'JNJ', 'SPY']

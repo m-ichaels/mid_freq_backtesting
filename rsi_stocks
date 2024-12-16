@@ -3,7 +3,7 @@ from alpaca.data.requests import StockBarsRequest
 from alpaca.data.timeframe import TimeFrame
 from datetime import datetime
 
-client = StockHistoricalDataClient("PK1FSI37O17SE0J9Y7NF", "eFKWe2hN771IBcH27mc7BJSNZNI5ecp6utRq7isd")
+client = StockHistoricalDataClient("your_alpaca_key_here", "your_secret_key_here")
 
 request_params = StockBarsRequest(
     symbol_or_symbols=["GLD"],

@@ -1,8 +1,9 @@
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockLatestQuoteRequest
+from config import API_KEY, SECRET_KEY
 
 # keys required for stock historical data client
-client = StockHistoricalDataClient('your_alpaca_key_here', 'your_secret_key_here')
+client = StockHistoricalDataClient(API_KEY, SECRET_KEY)
 
 # multi symbol request - single symbol is similar
 multisymbol_request_params = StockLatestQuoteRequest(symbol_or_symbols=["SPY", "GLD", "TLT"])

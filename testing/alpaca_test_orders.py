@@ -3,12 +3,11 @@ from alpaca.trading.requests import MarketOrderRequest
 from alpaca.trading.enums import OrderSide, TimeInForce
 from alpaca.data.historical import StockHistoricalDataClient
 from alpaca.data.requests import StockLatestQuoteRequest
+from config import API_KEY, SECRET_KEY
 
-KEY = 'your_alpaca_key_here'
-SECRET_KEY = 'your_secret_key_here'
 # paper=True enables paper trading
-trading_client = TradingClient(KEY, SECRET_KEY, paper=True)
-client = StockHistoricalDataClient(KEY, SECRET_KEY)
+trading_client = TradingClient(API_KEY, SECRET_KEY, paper=True)
+client = StockHistoricalDataClient(API_KEY, SECRET_KEY)
 
 # multi symbol request - single symbol is similar
 multisymbol_request_params = StockLatestQuoteRequest(symbol_or_symbols=["SPY", "GLD", "TLT"])
@@ -33,6 +32,6 @@ market_order_data2 = MarketOrderRequest(
                     )
 
 # Market order
-#market_order = trading_client.submit_order(
+# market_order = trading_client.submit_order(
 #                order_data=market_order_data
 #               )

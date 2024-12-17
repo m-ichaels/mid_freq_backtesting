@@ -2,6 +2,8 @@ import pandas as pd
 import numpy as np
 from binance.client import Client
 
+pair = "QNT/USDT"
+
 def download_data(name_base, name_quote, timeframe, starting_date, ending_date):
     info = Client().get_historical_klines(name_base + name_quote, timeframe, starting_date, ending_date)
     data = pd.DataFrame(info, columns=['timestamp', 'open', 'high', 'low', 'close', 'volume', 'close_time', 'quote_av', 'trades', 'tb_base_av', 'tb_quote_av', 'ignore'])

@@ -1,6 +1,4 @@
-# README
-
-## Purpose
+# Purpose
 
 This repository demonstrates my proficiency in Python programming and my ability to design and implement trading algorithms using real-world financial data. The code here is intended to showcase my skills, including working with APIs, performing data analysis, and backtesting trading strategies. While the algorithms are functional and follow common trading principles, the main objective of this project is to illustrate my knowledge and expertise in creating Python-based financial models.
 
